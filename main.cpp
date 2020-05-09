@@ -100,7 +100,6 @@ int main(int argv, char** args)
 	}
 
 
-
 	// Cleanup
 	//
 	Mix_FreeMusic(music);
@@ -115,4 +114,3 @@ int main(int argv, char** args)
 
     return EXIT_SUCCESS;
 }
-
