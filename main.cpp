@@ -4,6 +4,9 @@
 #include <iostream>
 //#include <stdio.h>
 
+#define HRES 640
+#define VRES 480
+
 int main(int argv, char** args)
 {
 
@@ -18,7 +21,7 @@ int main(int argv, char** args)
         return EXIT_FAILURE;
     }
 
-    SDL_Window* win = SDL_CreateWindow("Akino test!", 100, 100, 620, 387, SDL_WINDOW_SHOWN);
+    SDL_Window* win = SDL_CreateWindow("Akino test!", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, HRES*2, VRES*2, SDL_WINDOW_SHOWN );
     if (win == nullptr) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
