@@ -6,42 +6,41 @@
 
 int main(int argv, char** args)
 {
-    using std::cerr;
-    using std::endl;
 
-	
+    // Set standard log
+    SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO);
 
-	cerr << "init all" << endl;
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init: Init all");
 	//printf("%s \n", "Init all");
     // SDL init all
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        cerr << "SDL_Init Error: " << SDL_GetError() << endl;
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init Error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
 
     SDL_Window* win = SDL_CreateWindow("Akino test!", 100, 100, 620, 387, SDL_WINDOW_SHOWN);
     if (win == nullptr) {
-        cerr << "SDL_CreateWindow Error: " << SDL_GetError() << endl;
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
 
     SDL_Renderer* ren
         = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (ren == nullptr) {
-        cerr << "SDL_CreateRenderer Error" << SDL_GetError() << endl;
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
 
     SDL_Surface* bmp = SDL_LoadBMP("./akinosoft.bmp");
     if (bmp == nullptr) {
-        cerr << "SDL_LoadBMP Error: " << SDL_GetError() << endl;
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_LoadBMP Error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
 
     SDL_Texture* tex = SDL_CreateTextureFromSurface(ren, bmp);
     SDL_FreeSurface(bmp);
     if (tex == nullptr) {
-        cerr << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << endl;
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
 
@@ -50,7 +49,7 @@ int main(int argv, char** args)
 	
 	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024)==-1) {
     	//printf("Mix_OpenAudio: %s\n", Mix_GetError());
-		cerr << "Mix_OpenAudio: " << Mix_GetError() << endl;
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_OpenAudio Error: %s\n", SDL_GetError());
     	return EXIT_FAILURE;
 	}
 	
@@ -59,7 +58,7 @@ int main(int argv, char** args)
 	if((initted&flags) != flags) {
 	    //printf("Mix_Init: Failed to init required ogg and mod support!\n");
 	    //printf("Mix_Init: %s\n", Mix_GetError());
-		cerr << "Mix_Init: " << Mix_GetError() << endl;
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_Init: %s\n", SDL_GetError());
     	return EXIT_FAILURE;
 	}
     
@@ -69,13 +68,14 @@ int main(int argv, char** args)
     if(!music) {
         //printf("Mix_LoadMUS(\"music.mp3\"): %s\n", Mix_GetError());
         // this might be a critical error...
-		cerr << "Mix_LoadMUX: " << Mix_GetError() << endl;
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUX: %s\n", SDL_GetError());
 		return EXIT_FAILURE;
     }
 
 	if(Mix_PlayMusic(music, 1)==-1) {
         //printf("Mix_PlayMusic: %s\n", Mix_GetError());
         // well, there's no music, but most games don't break without music...
+        SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Mix_PlayMusic: %s\n", SDL_GetError());
     }
 
 	// Start the main loop
