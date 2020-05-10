@@ -81,6 +81,9 @@ int main(int argv, char** args)
         SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Mix_PlayMusic: %s\n", SDL_GetError());
     }
 
+    // hide mouse
+    SDL_ShowCursor(SDL_DISABLE);
+
 	// Start the main loop
 	bool quit = false;
 
