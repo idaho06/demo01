@@ -13,8 +13,9 @@ pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2)
 pkg_check_modules(SDL2_MIXER REQUIRED IMPORTED_TARGET SDL2_mixer)
 
 add_subdirectory(src)
+file(GLOB_RECURSE Demo01_SOURCES "./src/*.cpp")
 
-add_executable(demo01 ./src/main.cpp )
+add_executable(demo01 ${Demo01_SOURCES})
 
 target_link_libraries(demo01 PUBLIC
     PkgConfig::SDL2
