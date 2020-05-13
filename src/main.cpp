@@ -13,7 +13,7 @@ int main(int argv, char** args)
     // Set standard log
     SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO);
 
-    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init: Init all");
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init: Starting engines!!");
 	//printf("%s \n", "Init all");
     // SDL init all
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -21,12 +21,19 @@ int main(int argv, char** args)
         return EXIT_FAILURE;
     }
 
-    SDL_Window* win = SDL_CreateWindow("Akino test!", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, HRES*2, VRES*2, SDL_WINDOW_SHOWN );
+    SDL_Window* win = SDL_CreateWindow("AkinoDemo01", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, HRES*2, VRES*2, SDL_WINDOW_SHOWN);
     if (win == nullptr) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
-
+/*
+    // force non full screen
+    //
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetWindowFullscreen: forcing windowed mode");
+    if (SDL_SetWindowFullscreen(win, 0) < 0) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetWindowFullscreen Error: %s\n", SDL_GetError());
+    }
+*/
     SDL_Renderer* ren
         = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (ren == nullptr) {
