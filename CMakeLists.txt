@@ -9,7 +9,7 @@ include_directories( ./src )
 # pkg-config calls
 find_package(PkgConfig REQUIRED) 
 
-pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET SDL2)
+pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2)
 pkg_check_modules(SDL2_MIXER REQUIRED IMPORTED_TARGET SDL2_mixer)
 
 add_subdirectory(src)
