@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 //#include <stdio.h>
+#include "texturemanager.h"
 
 #define HRES 640
 #define VRES 480
@@ -41,6 +42,7 @@ int main(int argv, char** args)
         return EXIT_FAILURE;
     }
 
+    /*
     SDL_Surface* bmp = SDL_LoadBMP("./akinosoft.bmp");
     if (bmp == nullptr) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_LoadBMP Error: %s\n", SDL_GetError());
@@ -53,7 +55,9 @@ int main(int argv, char** args)
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
+    */
 
+    TextureManager * texture = new TextureManager("./akinosoft.bmp", ren);
 
 	// Sound init
 	
@@ -106,7 +110,8 @@ int main(int argv, char** args)
             }
         }
         SDL_RenderClear(ren);
-	    SDL_RenderCopy(ren, tex, nullptr, nullptr);
+	    //SDL_RenderCopy(ren, tex, nullptr, nullptr);
+        texture->Render(nullptr, nullptr);
 	    SDL_RenderPresent(ren);
 		//SDL_Delay(250);
 		//
@@ -120,7 +125,8 @@ int main(int argv, char** args)
 	Mix_Quit();
 	Mix_CloseAudio();
 
-    SDL_DestroyTexture(tex);
+    //SDL_DestroyTexture(tex);
+    delete texture;
     SDL_DestroyRenderer(ren);
     SDL_DestroyWindow(win);
     SDL_Quit();
