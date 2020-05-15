@@ -15,7 +15,6 @@ int main(int argv, char** args)
     SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO);
 
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init: Starting engines!!");
-	//printf("%s \n", "Init all");
     // SDL init all
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init Error: %s\n", SDL_GetError());
@@ -27,14 +26,6 @@ int main(int argv, char** args)
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
-/*
-    // force non full screen
-    //
-    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetWindowFullscreen: forcing windowed mode");
-    if (SDL_SetWindowFullscreen(win, 0) < 0) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetWindowFullscreen Error: %s\n", SDL_GetError());
-    }
-*/
     SDL_Renderer* ren
         = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (ren == nullptr) {
@@ -42,27 +33,17 @@ int main(int argv, char** args)
         return EXIT_FAILURE;
     }
 
-    /*
-    SDL_Surface* bmp = SDL_LoadBMP("./akinosoft.bmp");
-    if (bmp == nullptr) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_LoadBMP Error: %s\n", SDL_GetError());
-        return EXIT_FAILURE;
-    }
-
-    SDL_Texture* tex = SDL_CreateTextureFromSurface(ren, bmp);
-    SDL_FreeSurface(bmp);
-    if (tex == nullptr) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
-        return EXIT_FAILURE;
-    }
-    */
-
     TextureManager * texture = new TextureManager("./akinosoft.bmp", ren);
+    /*
+    SDL_Rect size;
+    size.w=640;
+    size.h=480;
+    TextureManager * texture = new TextureManager(size,TEXTURE_WHITE, ren);
+    */
 
 	// Sound init
 	
 	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024)==-1) {
-    	//printf("Mix_OpenAudio: %s\n", Mix_GetError());
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_OpenAudio Error: %s\n", SDL_GetError());
     	return EXIT_FAILURE;
 	}
@@ -70,8 +51,6 @@ int main(int argv, char** args)
 	int flags=MIX_INIT_OGG|MIX_INIT_MOD;
 	int initted=Mix_Init(flags);
 	if((initted&flags) != flags) {
-	    //printf("Mix_Init: Failed to init required ogg and mod support!\n");
-	    //printf("Mix_Init: %s\n", Mix_GetError());
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_Init: %s\n", SDL_GetError());
     	return EXIT_FAILURE;
 	}
@@ -80,15 +59,11 @@ int main(int argv, char** args)
 	Mix_Music *music;
     music=Mix_LoadMUS("./ARTIST.S3M");
     if(!music) {
-        //printf("Mix_LoadMUS(\"music.mp3\"): %s\n", Mix_GetError());
-        // this might be a critical error...
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUX: %s\n", SDL_GetError());
 		return EXIT_FAILURE;
     }
 
 	if(Mix_PlayMusic(music, 1)==-1) {
-        //printf("Mix_PlayMusic: %s\n", Mix_GetError());
-        // well, there's no music, but most games don't break without music...
         SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Mix_PlayMusic: %s\n", SDL_GetError());
     }
 
@@ -110,7 +85,6 @@ int main(int argv, char** args)
             }
         }
         SDL_RenderClear(ren);
-	    //SDL_RenderCopy(ren, tex, nullptr, nullptr);
         texture->Render(nullptr, nullptr);
 	    SDL_RenderPresent(ren);
 		//SDL_Delay(250);

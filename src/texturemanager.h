@@ -1,6 +1,12 @@
 #pragma once
 #include <SDL2/SDL.h>
 
+enum TextureColor {
+    TEXTURE_BLACK,
+    TEXTURE_WHITE,
+    TEXTURE_TRANS
+};
+
 
 class TextureManager {
     private:
@@ -9,6 +15,8 @@ class TextureManager {
 
     public:
         TextureManager(const char* file, SDL_Renderer* ren);
+        TextureManager(const SDL_Rect sizerect, TextureColor color, SDL_Renderer* ren);
         ~TextureManager();
         bool Render(const SDL_Rect* srcrect, const SDL_Rect* dstrect);
+        SDL_Rect getSizeRect();
 };
