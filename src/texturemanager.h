@@ -4,6 +4,9 @@
 enum TextureColor {
     TEXTURE_BLACK,
     TEXTURE_WHITE,
+    TEXTURE_RED,
+    TEXTURE_GREEN,
+    TEXTURE_BLUE,
     TEXTURE_TRANS
 };
 
@@ -12,6 +15,7 @@ class TextureManager {
     private:
         SDL_Renderer* ren;
         SDL_Texture* tex; 
+        SDL_Surface* sur;
 
     public:
         TextureManager(const char* file, SDL_Renderer* ren);
