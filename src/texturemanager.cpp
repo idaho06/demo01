@@ -11,8 +11,13 @@ TextureManager::TextureManager(const char* file, SDL_Renderer* ren){
         //TODO: Throw exception
     }
 
-    this->tex = SDL_CreateTextureFromSurface(ren, bmp);
+    this->sur = SDL_ConvertSurfaceFormat(bmp, SDL_PIXELFORMAT_ARGB8888, 0);
+    if (this->sur == NULL) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_ConvertSurfaceFormat Error: %s\n", SDL_GetError());
+        //TODO: Throw exception
+    }
     SDL_FreeSurface(bmp);
+    this->tex = SDL_CreateTextureFromSurface(ren, this->sur);
     if (this->tex == nullptr) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         //TODO: Throw exception
@@ -81,33 +86,12 @@ TextureManager::TextureManager(const SDL_Rect sizerect, TextureColor color, SDL_
     void *surPixels = this->sur->pixels;
     int surPitch = this->sur->pitch;
     // updated the texture with the pixels from the surface
-    /*
-    if (SDL_UpdateTexture(this->tex, NULL, surPixels, surPitch) < 0){
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't Update texture: %s\n", SDL_GetError());
-    //TODO: Throw Error
-    }
-    */
 
     memcpy(texPixels, surPixels, (surPitch * this->sur->h));
 
     // unlock the texture
     SDL_UnlockTexture(this->tex);
 
-    /* // This is old code
-    SDL_Surface* surface = nullptr;
-    surface = SDL_CreateRGBSurfaceWithFormat(0, sizerect.w, sizerect.h, 32, SDL_PIXELFORMAT_RGBA32);
-    if (surface == nullptr) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateRGBSurface() failed: %s\n", SDL_GetError());
-        //TODO: Throw exception
-    }
-    //TODO: Fill with color
-    this->tex = SDL_CreateTextureFromSurface(ren, surface);
-    SDL_FreeSurface(surface);
-    if (this->tex == nullptr) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
-        //TODO: Throw exception
-    }
-    */
 }
 
 bool TextureManager::Render(const SDL_Rect* srcrect, const SDL_Rect* dstrect) {
@@ -131,6 +115,31 @@ SDL_Rect TextureManager::getSizeRect(){
     return size;
 }
 
+SDL_Surface* TextureManager::getSurface(){
+    return this->sur;
+}
+
+bool TextureManager::Update(){
+    // Update the texture with the surface with a blitting
+    // lock the texture
+    void *texPixels;
+    int pitch;    
+    if (SDL_LockTexture(this->tex, NULL, &texPixels, &pitch) < 0) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't lock texture: %s\n", SDL_GetError());
+        return false;
+    }
+    // Get the pixels information from the surface
+    void *surPixels = this->sur->pixels;
+    int surPitch = this->sur->pitch;
+    // updated the texture with the pixels from the surface
+
+    memcpy(texPixels, surPixels, (surPitch * this->sur->h));
+
+    // unlock the texture
+    SDL_UnlockTexture(this->tex);
+
+    return true;
+}
 
 TextureManager::~TextureManager(){
     if (this->sur != nullptr) {

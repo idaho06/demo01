@@ -37,7 +37,7 @@ int main(int argv, char** args)
     SDL_Rect size;
     size.w=640;
     size.h=480;
-    TextureManager * texture = new TextureManager(size,TEXTURE_WHITE, ren);
+    TextureManager * texture = new TextureManager(size,TEXTURE_GREEN, ren);
 
 	// Sound init
 	
