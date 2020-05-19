@@ -20,3 +20,12 @@ add_executable(demo01 ${Demo01_SOURCES})
 target_link_libraries(demo01 PUBLIC
     PkgConfig::SDL2
     PkgConfig::SDL2_MIXER)
+
+# compile options
+if (MSVC)
+    # warning level 4 and all warnings as errors
+    add_compile_options(/W4 /WX)
+else()
+    # lots of warnings and all warnings as errors
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
