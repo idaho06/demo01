@@ -20,12 +20,18 @@ TextureManager::TextureManager(const char* file, SDL_Renderer* ren){
     }
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Freeing bmp. \n");
     SDL_FreeSurface(bmp);
+
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Creating Texture. \n");
-    this->tex = SDL_CreateTextureFromSurface(ren, this->sur);
-    if (this->tex == nullptr) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
-        //TODO: Throw exception
+    this->tex = SDL_CreateTexture(this->ren, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, this->sur->w, this->sur->h);
+    if (this->tex == nullptr){
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTexture() Error: %s\n", SDL_GetError());
+        //TODO: Throw Error.
     }
+    
+
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Updating texture with surface.\n");
+    this->Update();
+
     int w = 0;
     int h = 0;
     Uint32 format = 0;
@@ -80,23 +86,7 @@ TextureManager::TextureManager(const SDL_Rect sizerect, TextureColor color, SDL_
     }
 
     // Update the texture with the surface with a blitting
-    // lock the texture
-    void *texPixels;
-    int pitch;    
-    if (SDL_LockTexture(this->tex, NULL, &texPixels, &pitch) < 0) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't lock texture: %s\n", SDL_GetError());
-        //TODO: trow exception
-    }
-    // Get the pixels information from the surface
-    void *surPixels = this->sur->pixels;
-    int surPitch = this->sur->pitch;
-    // updated the texture with the pixels from the surface
-
-    memcpy(texPixels, surPixels, (surPitch * this->sur->h));
-
-    // unlock the texture
-    SDL_UnlockTexture(this->tex);
-
+    this->Update();
 }
 
 bool TextureManager::Render(const SDL_Rect* srcrect, const SDL_Rect* dstrect) {
