@@ -5,27 +5,32 @@ TextureManager::TextureManager(const char* file, SDL_Renderer* ren){
     this->tex = nullptr;
     this->sur = nullptr;
     this->ren = ren;
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "We are going to load: %s\n", file);
     SDL_Surface* bmp = SDL_LoadBMP(file);
     if (bmp == nullptr) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_LoadBMP Error: %s\n", SDL_GetError());
         //TODO: Throw exception
     }
 
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Creating surface. \n");
     this->sur = SDL_ConvertSurfaceFormat(bmp, SDL_PIXELFORMAT_ARGB8888, 0);
     if (this->sur == NULL) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_ConvertSurfaceFormat Error: %s\n", SDL_GetError());
         //TODO: Throw exception
     }
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Freeing bmp. \n");
     SDL_FreeSurface(bmp);
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Creating Texture. \n");
     this->tex = SDL_CreateTextureFromSurface(ren, this->sur);
     if (this->tex == nullptr) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         //TODO: Throw exception
     }
-    int w,h;
-    Uint32* format;
-    SDL_QueryTexture(this->tex, format, NULL, &w, &h);
-    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Format: %s\n", SDL_GetPixelFormatName(*format));
+    int w = 0;
+    int h = 0;
+    Uint32 format = 0;
+    SDL_QueryTexture(this->tex, &format, NULL, &w, &h);
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Format: %s\n", SDL_GetPixelFormatName(format));
 }
 
 TextureManager::TextureManager(const SDL_Rect sizerect, TextureColor color, SDL_Renderer* ren){

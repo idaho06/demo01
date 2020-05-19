@@ -33,11 +33,11 @@ int main(int argv, char** args)
         return EXIT_FAILURE;
     }
 
-    // TextureManager * texture = new TextureManager("./akinosoft.bmp", ren);
-    SDL_Rect size;
-    size.w=640;
-    size.h=480;
-    TextureManager * texture = new TextureManager(size,TEXTURE_GREEN, ren);
+    TextureManager * texture = new TextureManager("./akinosoft.bmp", ren);
+    //SDL_Rect size;
+    //size.w=640;
+    //size.h=480;
+    //TextureManager * texture = new TextureManager(size,TEXTURE_GREEN, ren);
 
 	// Sound init
 	
