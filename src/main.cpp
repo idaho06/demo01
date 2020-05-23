@@ -5,6 +5,8 @@
 //#include <stdio.h>
 #include "sdlmanager.h"
 #include "texturemanager.h"
+#include "effect.h"
+#include "hdispl.h"
 
 #define HRES 640
 #define VRES 480
@@ -22,6 +24,9 @@ int main(int argv, char** args)
 
     sdlman->loadPlayMusic("./ARTIST.S3M");
 
+    // Load Horizontal displacement effect
+    Effect * hdispl = new HDispl();
+
 	// Start the main loop
 	bool quit = false;
 
@@ -35,13 +40,15 @@ int main(int argv, char** args)
                 quit = true;
             }
         }
-        SDL_RenderClear(ren);
+        //SDL_RenderClear(ren);
+
         texture->Render(nullptr, nullptr);
 	    SDL_RenderPresent(ren);
 		//SDL_Delay(250);
 		//
 	}
 
+    delete hdispl;
     delete texture;
     delete sdlman;
     return EXIT_SUCCESS;
