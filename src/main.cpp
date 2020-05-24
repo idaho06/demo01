@@ -41,7 +41,8 @@ int main(int argv, char** args)
             }
         }
         //SDL_RenderClear(ren);
-
+        hdispl->Apply(texture);
+        texture->Update();
         texture->Render(nullptr, nullptr);
 	    SDL_RenderPresent(ren);
 		//SDL_Delay(250);
