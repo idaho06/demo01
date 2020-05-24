@@ -114,6 +114,14 @@ SDL_Surface* TextureManager::getSurface(){
     return this->sur;
 }
 
+int TextureManager::getW(){
+    return this->sur->w;
+}
+
+int TextureManager::getPitch(){
+    return this->sur->pitch;
+}
+
 bool TextureManager::Update(){
     // Update the texture with the surface with a blitting
     // lock the texture

@@ -24,5 +24,7 @@ class TextureManager {
         bool Render(const SDL_Rect* srcrect, const SDL_Rect* dstrect);
         SDL_Rect getSizeRect();
         SDL_Surface* getSurface();
+        int getW();
+        int getPitch();
         bool Update();
 };

@@ -4,10 +4,12 @@
 #include "texturemanager.h"
 #include <SDL2/SDL.h>
 
-HDispl::HDispl(){
+HDispl::HDispl(const int w){
+    this->linebuf = new std::vector<Uint32>(w, (Uint32)0xFFFFFFFF);
 }
 
 HDispl::~HDispl(){
+    delete this->linebuf;
 }
 
 bool HDispl::Apply(TextureManager * texture){
@@ -15,11 +17,8 @@ bool HDispl::Apply(TextureManager * texture){
     SDL_Surface* sur = texture->getSurface();
     void* pixels = sur->pixels; // pointer to the first value of the pixeldata
     void* cursor = pixels; // cursor for pointing to the data
-    int pitch = sur->pitch; // pitch is the lenght in bytes (char) of one row
+    int pitch = sur->w; // pitch is the lenght in bytes (char) of one row
     int h = sur->h; // height of the surface (number of pitch lenghts)
-    
-
-    std::vector<Uint8> linebuf(pitch, (Uint8)255); // initialize the line buffer
     
     // modify pixels here
     if (SDL_MUSTLOCK(sur)){
@@ -31,17 +30,17 @@ bool HDispl::Apply(TextureManager * texture){
         // copy one line of surface data to line buffer
         // We assume cursor points to beggining of line
         void* start = cursor;
-        for (;(Uint8*)cursor<((Uint8*)start+pitch); cursor = static_cast<Uint8*>(cursor) + 1 ){
-            linebuf.at((Uint8*)cursor-(Uint8*)start)=*(Uint8*)cursor;
+        for (;(Uint32*)cursor<((Uint32*)start+pitch); cursor = static_cast<Uint32*>(cursor) + 1 ){
+            this->linebuf->at((Uint32*)cursor-(Uint32*)start)=*(Uint32*)cursor;
         }
         
-        // rotate data in the buffer
-        std::rotate(linebuf.begin(), linebuf.begin() + 4, linebuf.end());
+        // rotate left data in the buffer
+        std::rotate(this->linebuf->begin(), this->linebuf->begin() + 1, this->linebuf->end());
         // copy back buffer to the surface  
         // let's reset cursor to start of the line
         cursor = start;
-        for (;(Uint8*)cursor<((Uint8*)start+pitch); cursor = static_cast<Uint8*>(cursor) + 1 ){
-            *(Uint8*)cursor = linebuf.at((Uint8*)cursor-(Uint8*)start);
+        for (;(Uint32*)cursor<((Uint32*)start+pitch); cursor = static_cast<Uint32*>(cursor) + 1 ){
+            *(Uint32*)cursor = this->linebuf->at((Uint32*)cursor-(Uint32*)start);
         }
 
 
