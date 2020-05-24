@@ -1,15 +1,24 @@
-#include <vector>
+//#include <vector>
 #include <algorithm>
 #include "hdispl.h"
 #include "texturemanager.h"
 #include <SDL2/SDL.h>
 
-HDispl::HDispl(const int w){
-    this->linebuf = new std::vector<Uint32>(w, (Uint32)0xFFFFFFFF);
+HDispl::HDispl(const int w, const int speed){
+    //this->linebuf = new std::vector<Uint32>(w, (Uint32)0xFFFFFFFF);
+    this->buffa = new Uint32[w];
+    this->buffb = new Uint32[w];
+    for (int i = 0; i < w; i++){
+        this->buffa[i] = 0xFFFFFFFF;
+        this->buffb[i] = 0xFFFFFFFF;
+    }
+    this->speed = speed;
 }
 
 HDispl::~HDispl(){
-    delete this->linebuf;
+    //delete this->linebuf;
+    delete [] this->buffa;
+    delete [] this->buffb;
 }
 
 bool HDispl::Apply(TextureManager * texture){
@@ -17,7 +26,7 @@ bool HDispl::Apply(TextureManager * texture){
     SDL_Surface* sur = texture->getSurface();
     void* pixels = sur->pixels; // pointer to the first value of the pixeldata
     void* cursor = pixels; // cursor for pointing to the data
-    int pitch = sur->w; // pitch is the lenght in bytes (char) of one row
+    int pitch = sur->w; // pitch is the lenght in Uint32 of one row
     int h = sur->h; // height of the surface (number of pitch lenghts)
     
     // modify pixels here
@@ -27,6 +36,47 @@ bool HDispl::Apply(TextureManager * texture){
 
     // for each line...
     for (int line=0; line<h; line++){
+
+        int displ = this->speed; // TODO: proper sin calculation for wavvy effect?
+
+        while (displ >= pitch){
+            displ -= pitch;
+        }
+        while (displ <= -pitch){
+            displ += pitch;
+        }
+
+        if (displ < 0) {
+            displ = pitch + displ;
+        }
+        
+        // we assume cursor is at the beggining of the line and line lenght is pitch (Uint32)
+        Uint32 * start = (Uint32 *)cursor;
+        Uint32 * end = (Uint32 *)cursor + pitch - 1;
+
+        // big slice
+        Uint32 * bigstart = start;
+        Uint32 * bigend = end - displ;
+        // small slice
+        Uint32 * smallstart = bigend + 1;
+        Uint32 * smallend = end;
+
+        //memcopy to buffa and buffb
+        std::copy(bigstart, bigend + 1, this->buffa);
+        std::copy(smallstart, smallend + 1, this->buffb);
+
+        // copy back to surface
+        Uint32 * buffbend = this->buffb + displ - 1;
+        Uint32 * buffaend = this->buffa + pitch - displ - 1;
+        // small to beggining
+        std::copy(this->buffb, buffbend + 1, (Uint32 *)cursor);
+        // big to rear
+        std::copy(this->buffa, buffaend + 1, (Uint32 *)cursor + displ );
+
+        // move cursor to following line
+        cursor = static_cast<Uint32*>(cursor) + pitch;
+
+        /*
         // copy one line of surface data to line buffer
         // We assume cursor points to beggining of line
         void* start = cursor;
@@ -42,7 +92,7 @@ bool HDispl::Apply(TextureManager * texture){
         for (;(Uint32*)cursor<((Uint32*)start+pitch); cursor = static_cast<Uint32*>(cursor) + 1 ){
             *(Uint32*)cursor = this->linebuf->at((Uint32*)cursor-(Uint32*)start);
         }
-
+        */
 
     }
 

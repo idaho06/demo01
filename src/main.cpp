@@ -25,7 +25,7 @@ int main(int argv, char** args)
     sdlman->loadPlayMusic("./ARTIST.S3M");
 
     // Load Horizontal displacement effect
-    Effect * hdispl = new HDispl(texture->getW());
+    Effect * hdispl = new HDispl(texture->getW(), -1);
 
 	// Start the main loop
 	bool quit = false;

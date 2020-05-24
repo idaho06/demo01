@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include "texturemanager.h"
+#include <algorithm>
 
 TextureManager::TextureManager(const char* file, SDL_Renderer* ren){
     this->tex = nullptr;
@@ -136,7 +137,10 @@ bool TextureManager::Update(){
     int surPitch = this->sur->pitch;
     // updated the texture with the pixels from the surface
 
-    memcpy(texPixels, surPixels, (surPitch * this->sur->h));
+    // old c way
+    //memcpy(texPixels, surPixels, (surPitch * this->sur->h));
+    // modern c++ way
+    std::copy((Uint32*)surPixels, (Uint32*)surPixels + (this->sur->w * this->sur->h), (Uint32*)texPixels);
 
     // unlock the texture
     SDL_UnlockTexture(this->tex);
