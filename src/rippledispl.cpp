@@ -1,10 +1,11 @@
 //#include <vector>
 #include <algorithm>
-#include "hdispl.h"
+#include "rippledispl.h"
 #include "texturemanager.h"
+#include "fastsin.h"
 #include <SDL2/SDL.h>
 
-HDispl::HDispl(const int w, const int speed){
+RippleDispl::RippleDispl(const int w, const int speed){
     //this->linebuf = new std::vector<Uint32>(w, (Uint32)0xFFFFFFFF);
     this->buffa = new Uint32[w];
     this->buffb = new Uint32[w];
@@ -13,16 +14,18 @@ HDispl::HDispl(const int w, const int speed){
         this->buffb[i] = 0xFFFFFFFF;
     }
     this->speed = speed;
+    this->bounce = new FastSin(120, 5);
     //TODO: make this with only one buffer
 }
 
-HDispl::~HDispl(){
+RippleDispl::~RippleDispl(){
     //delete this->linebuf;
     delete [] this->buffa;
     delete [] this->buffb;
+    delete bounce;
 }
 
-bool HDispl::Apply(TextureManager * texture){
+bool RippleDispl::Apply(TextureManager * texture){
     tick++;
     SDL_Surface* sur = texture->getSurface();
     void* pixels = sur->pixels; // pointer to the first value of the pixeldata
@@ -38,7 +41,7 @@ bool HDispl::Apply(TextureManager * texture){
     // for each line...
     for (int line=0; line<h; line++){
 
-        int displ = this->speed; // TODO: proper sin calculation for wavvy effect?
+        int displ = this->speed + bounce->isin(line+tick); 
 
         while (displ >= pitch){
             displ -= pitch;
