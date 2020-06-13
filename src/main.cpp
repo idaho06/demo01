@@ -8,6 +8,7 @@
 #include "effect.h"
 #include "hdispl.h"
 #include "rippledispl.h"
+#include "surface.h"
 
 #define HRES 640
 #define VRES 480
@@ -28,6 +29,9 @@ int main(int argv, char** args)
     // Load Horizontal displacement effect
     Effect * rdispl = new RippleDispl(texture->getW(), 0);
 
+    // Load Backbroud image
+    Effect * background = new Surface("./akinosoft.bmp");
+
 	// Start the main loop
 	bool quit = false;
 
@@ -42,6 +46,7 @@ int main(int argv, char** args)
             }
         }
         //SDL_RenderClear(ren);
+        background->Apply(texture);
         rdispl->Apply(texture);
         texture->Update();
         texture->Render(nullptr, nullptr);
@@ -50,6 +55,7 @@ int main(int argv, char** args)
 		//
 	}
 
+    delete background;
     delete rdispl;
     delete texture;
     delete sdlman;

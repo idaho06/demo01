@@ -14,7 +14,7 @@ RippleDispl::RippleDispl(const int w, const int speed){
         this->buffb[i] = 0xFFFFFFFF;
     }
     this->speed = speed;
-    this->bounce = new FastSin(120, 5);
+    this->bounce = new FastSin(30, 30);
     //TODO: make this with only one buffer
 }
 
