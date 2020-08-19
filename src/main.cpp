@@ -51,7 +51,7 @@ int main(int argv, char** args)
         texture->Update();
         texture->Render(nullptr, nullptr);
 	    SDL_RenderPresent(ren);
-		//SDL_Delay(250);
+		//SDL_Delay(1000/70);
 		//
 	}
 

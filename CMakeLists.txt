@@ -1,10 +1,11 @@
-project(demo01)
-cmake_minimum_required(VERSION 3.17.2)
-
-# flags
+cmake_policy(SET CMP0048 NEW) # For using VERSION in "project"
+project(demo01 VERSION 1.0 DESCRIPTION "XMas demo 2020")
+cmake_minimum_required(VERSION 3.16.3)
 
 # include files
-include_directories( ./src )
+include_directories( 
+    "./src" 
+    )
 
 # pkg-config calls
 find_package(PkgConfig REQUIRED) 
@@ -12,10 +13,18 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2)
 pkg_check_modules(SDL2_MIXER REQUIRED IMPORTED_TARGET SDL2_mixer)
 
-add_subdirectory(src)
-file(GLOB_RECURSE Demo01_SOURCES "./src/*.cpp")
+#add_subdirectory(src)
 
-add_executable(demo01 ${Demo01_SOURCES})
+add_executable(demo01
+    src/main.cpp
+    src/sdlmanager.cpp
+    src/texturemanager.cpp
+    src/surface.cpp
+    src/effect.cpp
+    src/fastsin.cpp
+    src/hdispl.cpp
+    src/rippledispl.cpp
+    )
 
 target_link_libraries(demo01 PUBLIC
     PkgConfig::SDL2
