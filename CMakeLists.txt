@@ -24,6 +24,7 @@ add_executable(demo01
     src/fastsin.cpp
     src/hdispl.cpp
     src/rippledispl.cpp
+    src/fire.cpp
     )
 
 target_link_libraries(demo01 PUBLIC

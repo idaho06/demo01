@@ -18,18 +18,18 @@ int main(int argv, char** args)
     SDLManager * sdlman = new SDLManager();
     SDL_Renderer* ren = sdlman->getRenderer();
 
-    TextureManager * texture = new TextureManager("./akinosoft.bmp", ren);
-    //SDL_Rect size;
-    //size.w = HRES;
-    //size.h = VRES;
-    //TextureManager * texture = new TextureManager(size,TEXTURE_GREEN, ren);
+    //TextureManager * texture = new TextureManager("./akinosoft.bmp", ren);
+    SDL_Rect size;
+    size.w = HRES;
+    size.h = VRES;
+    TextureManager * texture = new TextureManager(size,TEXTURE_GREEN, ren);
 
     sdlman->loadPlayMusic("./ARTIST.S3M");
 
     // Load Horizontal displacement effect
     Effect * rdispl = new RippleDispl(texture->getW(), 0);
 
-    // Load Backbroud image
+    // Load Background image
     Effect * background = new Surface("./akinosoft.bmp");
 
 	// Start the main loop
