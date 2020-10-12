@@ -3,8 +3,8 @@
 #include <valarray>
 
 FastSin::FastSin(const int lenght, const int amplitude){
-    floatTable = nullptr;
-    intTable = nullptr;
+    this->floatTable = nullptr;
+    this->intTable = nullptr;
     float pitwo = M_PI*(float)2.0;
     float interval[lenght];
     for(int i = 0; i < lenght; ++i){
@@ -65,13 +65,13 @@ float FastSin::fsin(const int angle){
 }
 
 FastSin::~FastSin(){
-    if(floatTable != nullptr){
-        delete floatTable;
-        floatTable = nullptr;
+    if(this->floatTable != nullptr){
+        delete this->floatTable;
+        this->floatTable = nullptr;
     }
-    if(intTable != nullptr){
-        delete intTable;
-        intTable = nullptr;
+    if(this->intTable != nullptr){
+        delete this->intTable;
+        this->intTable = nullptr;
     }
 
 };
